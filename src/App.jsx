@@ -1,21 +1,24 @@
 import React, { useState } from "react";
+import { IMaskInput } from "react-imask";
 import { z } from "zod";
+import "./App.css";
+
+// const schemaErrorOptional = { required_error: "Обязательное поле" };
 
 const userSchema = z.object({
-  name: z.string(),
-  sureName: z.string(),
-  patronymic: z.string(),
-  telNumber: z.string().min(10, "Номер не полный").max(11, "Слишком большой номер"),
+  userName: z.string().min(1, "Обязательное поле"),
+  sureName: z.string().min(1, "Обязательное поле"),
+  patronymic: z.string().optional(),
+  telNumber: z.string().min(10, "Номер не полный"),
   email: z.string().email("Неверный формат email"),
   optionTown: z.string(),
 });
-
 
 const newUser = {
   userName: "",
   sureName: "",
   patronymic: "",
-  telNumber: "" + "",
+  telNumber: "",
   email: "",
   optionTown: "",
 };
@@ -23,11 +26,9 @@ const newUser = {
 const App = () => {
   const [newUserObject, setNewUserObject] = useState(newUser);
   const [errors, setErrors] = useState({});
-  console.log(errors);
-  
-  
 
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
     const result = userSchema.safeParse(newUserObject);
 
     if (!result.success) {
@@ -44,7 +45,7 @@ const App = () => {
 
   return (
     <div>
-      <form onChange={handleSubmit}>
+      <form onSubmit={handleSubmit}>
         <p>Введите имя</p>
         <input
           onChange={(e) =>
@@ -53,6 +54,7 @@ const App = () => {
           placeholder="Имя"
           type="text"
         />
+        <p className="error-text">{errors.userName}</p>
         <p>Введите фамилию</p>
         <input
           onChange={(e) =>
@@ -61,6 +63,7 @@ const App = () => {
           placeholder="Фамилия"
           type="text"
         />
+        <p className="error-text">{errors.sureName}</p>
         <p>Введите Очество</p>
         <input
           onChange={(e) =>
@@ -70,17 +73,14 @@ const App = () => {
           type="text"
         />
         <p>Введите номер</p>
-        <select onChange={(e) => setNewUserObject({...newUserObject, telNumber: e.target.value})}>
-          <option>+7</option>
-          <option>+380</option>
-        </select>
-        <input
+        <IMaskInput
           onChange={(e) =>
             setNewUserObject({ ...newUserObject, telNumber: e.target.value })
           }
-          placeholder=""
-          type="text"
+          mask="+{7} (000) 000-00-00"
+          placeholder="Введите номер телефона"
         />
+        <p className="error-text">{errors.telNumber}</p>
         <p>Введите почту</p>
         <input
           onChange={(e) =>
@@ -89,15 +89,19 @@ const App = () => {
           placeholder="Почта"
           type="email"
         />
+        <p className="error-text">{errors.email}</p>
         <p>Выберите правильный город</p>
         <div class="selectgorod">
-          <select onChange={(e) => setNewUserObject({...newUserObject, optionTown: e.target.value})}>
-            <option >Выберите город</option>
+          <select
+            onChange={(e) =>
+              setNewUserObject({ ...newUserObject, optionTown: e.target.value })
+            }
+          >
             <option>Таганрог</option>
-            <option >Москва</option>
+            <option>Москва</option>
             <option>Нью-Йорк</option>
           </select>
-        </div> 
+        </div>
         <div>
           <button type="submit">Отправить данные</button>
         </div>
