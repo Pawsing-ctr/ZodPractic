@@ -1,3 +1,38 @@
 .error-text{
   color: red;
 }
+
+.all-page{
+  display: flex;
+  gap: 100px;
+}
+
+.el-text{
+  height: 30px;
+  border: 1px solid black;
+  border-radius: 10px;
+  padding: 5px;
+  background-color: rgb(250, 250, 250);
+  cursor: pointer;
+}
+
+.el-text:hover{
+  background-color: #bce0ff;
+  transition: 0.7s;
+}
+
+.active{
+  background-color: #bce0ff;
+}
+
+.second-block-list,
+.first-block-list{
+  overflow: auto;
+  height: 300px;
+}
+
+.right-content-page{
+  display: flex;
+  flex-direction: column;
+  gap: 100px;
+}
